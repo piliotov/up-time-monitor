@@ -2,5 +2,5 @@
   "url": "https://budgetracker.fly.dev/",
   "interval_sec": 60,
   "timeout_sec": 5,
-  "latency_threshold_ms": 1000
+  "max_latency_ms": 1000
 }
