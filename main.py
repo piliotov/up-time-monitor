@@ -46,7 +46,16 @@ def check_website():
         INSERT INTO checks (ts_utc, status_code, ok_state, latency_ms, error_msg)
         VALUES (?, ?, ?, ?, ?)""", (current_time, status_code, ok, latency_ms, error_msg))
     db.commit()
-    print("A check has been executed.")
+    print("A check has been executed. Percentage of successful checks: {:.2f}%".format(get_availability()))
+
+def get_availability():
+    select = db.execute("SELECT COUNT(*) FROM checks WHERE ok_state = 1")
+    success = select.fetchone()[0]
+    select = db.execute("SELECT COUNT(*) FROM checks")
+    total = select.fetchone()[0]
+    if total == 0:
+        return 0.0
+    return (success / total) * 100.0
 
 
 
