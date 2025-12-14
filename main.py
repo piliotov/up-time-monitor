@@ -3,6 +3,7 @@ import time
 import sqlite3
 import json
 import httpx
+import schedule
 
 with open("config.json") as config_file:
     config = json.load(config_file)
@@ -45,11 +46,16 @@ def check_website():
         INSERT INTO checks (ts_utc, status_code, ok_state, latency_ms, error_msg)
         VALUES (?, ?, ?, ?, ?)""", (current_time, status_code, ok, latency_ms, error_msg))
     db.commit()
+    print("A check has been executed.")
+
 
 
 def main():
-    check_website()
-    print("Uptime monitor ran a single check.")
+    schedule.every(check_interval).seconds.do(check_website)
+    print(f"Scheduler started. Checking every {check_interval} seconds.")
+    while True:
+        schedule.run_pending()
+        time.sleep(1)
 
 
 if __name__ == "__main__":
