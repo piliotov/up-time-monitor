@@ -62,6 +62,7 @@ def get_availability():
 def main():
     schedule.every(check_interval).seconds.do(check_website)
     print(f"Scheduler started. Checking every {check_interval} seconds.")
+    check_website()
     while True:
         schedule.run_pending()
         time.sleep(1)
